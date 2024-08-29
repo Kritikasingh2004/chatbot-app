@@ -1,9 +1,12 @@
+import ChatArea from "@/components/ChatArea";
+import HeaderSection from "@/components/HeaderSection";
 import Image from "next/image";
 
 export default function Home() {
   return (
-    <div>
-      <h1>Hello World!</h1>
-    </div>
+    <>
+      <HeaderSection />
+      <ChatArea />
+    </>
   );
 }
