@@ -4,83 +4,94 @@ import { FileUpload } from "@/components/ui/FileUpload";
 
 import ChatContainer from "./ChatContainer";
 import ChatInput from "./ChatInput";
+import Image from "next/image";
 
 const ChatArea = () => {
-    const [files, setFiles] = useState<File[]>([]);
-    const [inputFocused, setInputFocused] = useState(false);
-    const [chatHistory, setChatHistory] = useState<{ sender: string; message: string; files?: File[] }[]>([]);
-    const [userInput, setUserInput] = useState("");
+  const [files, setFiles] = useState<File[]>([]);
+  const [inputFocused, setInputFocused] = useState(false);
+  const [chatHistory, setChatHistory] = useState<
+    { sender: string; message: string; files?: File[] }[]
+  >([]);
+  const [userInput, setUserInput] = useState("");
 
-    const handleFileUpload = (uploadedFiles: File[]) => {
-        // Add file upload as a chat message
-        setChatHistory(prevChat => [
-            { sender: "user", message: "File uploaded:", files: uploadedFiles },
-            ...prevChat
-        ]);
+  const handleFileUpload = (uploadedFiles: File[]) => {
+    // Add file upload as a chat message
+    setChatHistory((prevChat) => [
+      { sender: "user", message: "File uploaded:", files: uploadedFiles },
+      ...prevChat,
+    ]);
 
-        // Simulate a response from the "other side"
-        setTimeout(() => {
-            setChatHistory(prevChat => [
-                { sender: "bot", message: "Your image is uploaded successfully. How can I help you with this?" },
-                ...prevChat
-            ]);
-        }, 1000);
+    // Simulate a response from the "other side"
+    setTimeout(() => {
+      setChatHistory((prevChat) => [
+        {
+          sender: "bot",
+          message:
+            "Your image is uploaded successfully. How can I help you with this?",
+        },
+        ...prevChat,
+      ]);
+    }, 1000);
 
-        // Update file state
-        setFiles(uploadedFiles);
-    };
+    // Update file state
+    setFiles(uploadedFiles);
 
-    const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-        setUserInput(e.target.value);
-    };
+    console.log(files);
+  };
 
-    const handleSubmit = (e: React.FormEvent) => {
-        e.preventDefault();
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setUserInput(e.target.value);
+  };
 
-        if (userInput.trim() === "") return;
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
 
-        // Add user message to chat history
-        setChatHistory(prevChat => [
-            { sender: "user", message: userInput },
-            ...prevChat
-        ]);
+    if (userInput.trim() === "") return;
 
-        // Simulate a response from the "other side"
-        setTimeout(() => {
-            setChatHistory(prevChat => [
-                { sender: "bot", message: `Response to "${userInput}"` },
-                ...prevChat
-            ]);
-        }, 1000);
+    // Add user message to chat history
+    setChatHistory((prevChat) => [
+      { sender: "user", message: userInput },
+      ...prevChat,
+    ]);
 
-        setUserInput("");
-    };
+    // Simulate a response from the "other side"
+    setTimeout(() => {
+      setChatHistory((prevChat) => [
+        { sender: "bot", message: `Response to "${userInput}"` },
+        ...prevChat,
+      ]);
+    }, 1000);
 
-    return (
-        <div className="w-full min-h-screen items-center flex flex-col p-4">
-            {/* Display FileUpload component until files are uploaded */}
-            {files.length === 0 ? (
-                <div className="flex-grow flex items-center justify-center">
-                    <FileUpload onChange={handleFileUpload} />
-                </div>
-            ) : (
-                <div className="flex flex-col flex-grow w-[70%] ">
-                    {/* Chat messages */}
-                    <ChatContainer chatHistory={chatHistory} />
+    setUserInput("");
+    console.log(files[0]);
+  };
 
-                    {/* Chat input form */}
-                    <ChatInput
-                        userInput={userInput}
-                        onChange={handleInputChange}
-                        onSubmit={handleSubmit}
-                        inputFocused={inputFocused}
-                        onFocus={() => setInputFocused(true)}
-                        onBlur={() => setInputFocused(false)}
-                    />
-                </div>
-            )}
+  return (
+    <div className="w-full min-h-screen items-center flex flex-col p-4">
+      {/* Display FileUpload component until files are uploaded */}
+      {files.length === 0 ? (
+        <div className="flex-grow flex items-center justify-center">
+          <FileUpload onChange={handleFileUpload} />
         </div>
-    );
+      ) : (
+        <div className="flex flex-col flex-grow w-[70%] ">
+          {/* Chat messages */}
+
+          <ChatContainer chatHistory={chatHistory} />
+
+          {/* Chat input form */}
+          <ChatInput
+            userInput={userInput}
+            onChange={handleInputChange}
+            onSubmit={handleSubmit}
+            inputFocused={inputFocused}
+            onFocus={() => setInputFocused(true)}
+            onBlur={() => setInputFocused(false)}
+          />
+        </div>
+      )}
+    </div>
+  );
 };
 
 export default ChatArea;
